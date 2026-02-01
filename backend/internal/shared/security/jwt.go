@@ -10,10 +10,10 @@ import (
 
 // TokenClaims represents JWT claims
 type TokenClaims struct {
-	UserID   string   `json:"user_id"`
-	TenantID string   `json:"tenant_id"`
-	Email    string   `json:"email"`
-	Role     string   `json:"role"`
+	UserID      string   `json:"user_id"`
+	TenantID    string   `json:"tenant_id"`
+	Email       string   `json:"email"`
+	Role        string   `json:"role"`
 	Permissions []string `json:"permissions"`
 	jwt.RegisteredClaims
 }

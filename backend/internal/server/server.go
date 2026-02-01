@@ -9,8 +9,8 @@ import (
 	"github.com/samuelayo/opensms/internal/infrastructure/database"
 	"github.com/samuelayo/opensms/internal/infrastructure/eventbus"
 	"github.com/samuelayo/opensms/internal/infrastructure/storage"
-	"github.com/samuelayo/opensms/internal/modules/auth"
 	"github.com/samuelayo/opensms/internal/modules/academic"
+	"github.com/samuelayo/opensms/internal/modules/auth"
 	"github.com/samuelayo/opensms/internal/modules/users"
 	"github.com/samuelayo/opensms/internal/shared/security"
 )

@@ -9,19 +9,19 @@ import (
 type Role string
 
 const (
-	RoleSuperAdmin     Role = "super_admin"      // Platform super administrator
-	RoleSchoolAdmin    Role = "school_admin"     // School/institution administrator
-	RolePrincipal      Role = "principal"        // School principal
-	RoleTeacher        Role = "teacher"          // Teacher
-	RoleStudent        Role = "student"          // Student
-	RoleParent         Role = "parent"           // Parent/Guardian
-	RoleLibrarian      Role = "librarian"        // Librarian
-	RoleAccountant     Role = "accountant"       // Accountant/Finance officer
-	RoleRegistrar      Role = "registrar"        // Registrar/Admissions officer
-	RoleCounselor      Role = "counselor"        // School counselor
-	RoleNurse          Role = "nurse"            // School nurse
-	RoleTransportAdmin Role = "transport_admin"  // Transport administrator
-	RoleHostelWarden   Role = "hostel_warden"    // Hostel warden
+	RoleSuperAdmin     Role = "super_admin"     // Platform super administrator
+	RoleSchoolAdmin    Role = "school_admin"    // School/institution administrator
+	RolePrincipal      Role = "principal"       // School principal
+	RoleTeacher        Role = "teacher"         // Teacher
+	RoleStudent        Role = "student"         // Student
+	RoleParent         Role = "parent"          // Parent/Guardian
+	RoleLibrarian      Role = "librarian"       // Librarian
+	RoleAccountant     Role = "accountant"      // Accountant/Finance officer
+	RoleRegistrar      Role = "registrar"       // Registrar/Admissions officer
+	RoleCounselor      Role = "counselor"       // School counselor
+	RoleNurse          Role = "nurse"           // School nurse
+	RoleTransportAdmin Role = "transport_admin" // Transport administrator
+	RoleHostelWarden   Role = "hostel_warden"   // Hostel warden
 )
 
 // Permission represents a specific permission in the system
@@ -51,17 +51,17 @@ const (
 
 // Academic Permissions
 const (
-	PermGradeCreate     Permission = "grade:create"
-	PermGradeRead       Permission = "grade:read"
-	PermGradeUpdate     Permission = "grade:update"
-	PermGradeDelete     Permission = "grade:delete"
-	PermGradePublish    Permission = "grade:publish"
-	PermAttendanceMark  Permission = "attendance:mark"
-	PermAttendanceRead  Permission = "attendance:read"
+	PermGradeCreate      Permission = "grade:create"
+	PermGradeRead        Permission = "grade:read"
+	PermGradeUpdate      Permission = "grade:update"
+	PermGradeDelete      Permission = "grade:delete"
+	PermGradePublish     Permission = "grade:publish"
+	PermAttendanceMark   Permission = "attendance:mark"
+	PermAttendanceRead   Permission = "attendance:read"
 	PermAssignmentCreate Permission = "assignment:create"
 	PermAssignmentGrade  Permission = "assignment:grade"
-	PermExamCreate      Permission = "exam:create"
-	PermExamManage      Permission = "exam:manage"
+	PermExamCreate       Permission = "exam:create"
+	PermExamManage       Permission = "exam:manage"
 )
 
 // Finance Permissions
@@ -104,11 +104,11 @@ const (
 
 // System Permissions
 const (
-	PermSystemConfig      Permission = "system:config"
-	PermSystemBackup      Permission = "system:backup"
-	PermSystemAuditLog    Permission = "system:audit_log"
-	PermReportGenerate    Permission = "report:generate"
-	PermReportViewAll     Permission = "report:view_all"
+	PermSystemConfig   Permission = "system:config"
+	PermSystemBackup   Permission = "system:backup"
+	PermSystemAuditLog Permission = "system:audit_log"
+	PermReportGenerate Permission = "report:generate"
+	PermReportViewAll  Permission = "report:view_all"
 )
 
 // RolePermissions maps roles to their default permissions

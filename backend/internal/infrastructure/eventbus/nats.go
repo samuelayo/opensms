@@ -165,11 +165,11 @@ func (n *NATSConnection) Health() error {
 // Event subjects (define your event types here)
 const (
 	// User events
-	SubjectUserCreated    = "user.created"
-	SubjectUserUpdated    = "user.updated"
-	SubjectUserDeleted    = "user.deleted"
-	SubjectUserLoggedIn   = "user.logged_in"
-	SubjectUserLoggedOut  = "user.logged_out"
+	SubjectUserCreated   = "user.created"
+	SubjectUserUpdated   = "user.updated"
+	SubjectUserDeleted   = "user.deleted"
+	SubjectUserLoggedIn  = "user.logged_in"
+	SubjectUserLoggedOut = "user.logged_out"
 
 	// Student events
 	SubjectStudentEnrolled  = "student.enrolled"

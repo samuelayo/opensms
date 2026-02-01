@@ -4,6 +4,8 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
+
 	"github.com/samuelayo/opensms/internal/infrastructure/database"
 	"github.com/samuelayo/opensms/internal/shared/security"
 )
@@ -183,6 +185,3 @@ func (s *Server) auditLogMiddleware() fiber.Handler {
 		return c.Next()
 	}
 }
-
-// Add missing import for zap
-import "go.uber.org/zap"

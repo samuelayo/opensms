@@ -9,13 +9,13 @@ import (
 
 // Config holds all application configuration
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	Redis    RedisConfig
-	NATS     NATSConfig
-	MinIO    MinIOConfig
-	JWT      JWTConfig
-	Security SecurityConfig
+	Server        ServerConfig
+	Database      DatabaseConfig
+	Redis         RedisConfig
+	NATS          NATSConfig
+	MinIO         MinIOConfig
+	JWT           JWTConfig
+	Security      SecurityConfig
 	Observability ObservabilityConfig
 }
 
@@ -92,12 +92,12 @@ type SecurityConfig struct {
 
 // ObservabilityConfig holds observability configuration
 type ObservabilityConfig struct {
-	JaegerEndpoint     string
-	PrometheusPort     int
-	LogLevel           string
-	EnableTracing      bool
-	EnableMetrics      bool
-	SamplingRate       float64
+	JaegerEndpoint string
+	PrometheusPort int
+	LogLevel       string
+	EnableTracing  bool
+	EnableMetrics  bool
+	SamplingRate   float64
 }
 
 // Load loads configuration from environment variables and config files

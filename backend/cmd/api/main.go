@@ -18,9 +18,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"go.uber.org/zap"
 
+	"github.com/samuelayo/opensms/internal/infrastructure/cache"
 	"github.com/samuelayo/opensms/internal/infrastructure/config"
 	"github.com/samuelayo/opensms/internal/infrastructure/database"
-	"github.com/samuelayo/opensms/internal/infrastructure/cache"
 	"github.com/samuelayo/opensms/internal/infrastructure/eventbus"
 	"github.com/samuelayo/opensms/internal/infrastructure/observability"
 	"github.com/samuelayo/opensms/internal/infrastructure/storage"
@@ -81,19 +81,19 @@ func main() {
 
 	// Initialize Fiber app with security configurations
 	app := fiber.New(fiber.Config{
-		AppName:               "OpenSMS API v1.0.0",
-		ServerHeader:          "OpenSMS",
-		StrictRouting:         true,
-		CaseSensitive:         true,
-		ErrorHandler:          server.ErrorHandler,
-		DisableStartupMessage: false,
+		AppName:                 "OpenSMS API v1.0.0",
+		ServerHeader:            "OpenSMS",
+		StrictRouting:           true,
+		CaseSensitive:           true,
+		ErrorHandler:            server.ErrorHandler,
+		DisableStartupMessage:   false,
 		EnableTrustedProxyCheck: true,
-		TrustedProxies:        cfg.Server.TrustedProxies,
-		ProxyHeader:           "X-Forwarded-For",
-		ReadTimeout:           time.Second * 30,
-		WriteTimeout:          time.Second * 30,
-		IdleTimeout:           time.Second * 120,
-		BodyLimit:             10 * 1024 * 1024, // 10MB
+		TrustedProxies:          cfg.Server.TrustedProxies,
+		ProxyHeader:             "X-Forwarded-For",
+		ReadTimeout:             time.Second * 30,
+		WriteTimeout:            time.Second * 30,
+		IdleTimeout:             time.Second * 120,
+		BodyLimit:               10 * 1024 * 1024, // 10MB
 	})
 
 	// Security Middleware
@@ -134,8 +134,8 @@ func main() {
 
 	// Rate Limiting (DDoS protection)
 	app.Use(limiter.New(limiter.Config{
-		Max:        100,
-		Expiration: 1 * time.Minute,
+		Max:               100,
+		Expiration:        1 * time.Minute,
 		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			// Rate limit by IP + User ID (if authenticated)
@@ -145,12 +145,12 @@ func main() {
 
 	// Initialize server with dependencies
 	srv := server.NewServer(server.Dependencies{
-		Config:      cfg,
-		DB:          db,
-		Cache:       redisClient,
-		EventBus:    natsConn,
-		Storage:     minioClient,
-		Logger:      log,
+		Config:   cfg,
+		DB:       db,
+		Cache:    redisClient,
+		EventBus: natsConn,
+		Storage:  minioClient,
+		Logger:   log,
 	})
 
 	// Register routes

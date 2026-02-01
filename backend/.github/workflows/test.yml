@@ -1,0 +1,126 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: opensms_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: opensms_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: opensms_test
+          DB_PASSWORD: test_password
+          DB_NAME: opensms_test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_ACCESS_SECRET: test-access-secret-key-min-32-characters
+          JWT_REFRESH_SECRET: test-refresh-secret-key-min-32-chars
+          ENCRYPTION_KEY: 12345678901234567890123456789012
+        run: |
+          go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+
+      - name: Generate coverage report
+        run: go tool cover -html=coverage.out -o coverage.html
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.out
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          args: --timeout=5m
+
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        working-directory: ./frontend/admin-portal
+        run: npm ci
+
+      - name: Run type check
+        working-directory: ./frontend/admin-portal
+        run: npm run type-check
+
+      - name: Run tests
+        working-directory: ./frontend/admin-portal
+        run: npm run test:coverage
+
+      - name: Run linter
+        working-directory: ./frontend/admin-portal
+        run: npm run lint

@@ -1,0 +1,38 @@
+{
+  "name": "opensms-admin-portal",
+  "version": "1.0.0",
+  "description": "OpenSMS Admin Portal - Vue.js 3 with Pinia",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
+    "pinia": "^2.1.7",
+    "axios": "^1.6.7",
+    "@vueuse/core": "^10.9.0",
+    "chart.js": "^4.4.2",
+    "vue-chartjs": "^5.3.0",
+    "date-fns": "^3.3.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.5",
+    "typescript": "^5.4.2",
+    "vue-tsc": "^2.0.6",
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "@types/node": "^20.11.25",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "@typescript-eslint/parser": "^7.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.1.1"
+  }
+}

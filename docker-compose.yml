@@ -1,0 +1,187 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: opensms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: opensms
+      POSTGRES_PASSWORD: opensms_dev_password
+      POSTGRES_DB: opensms
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opensms"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - opensms-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: opensms-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass opensms_redis_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - opensms-network
+
+  # NATS Event Bus
+  nats:
+    image: nats:2-alpine
+    container_name: opensms-nats
+    restart: unless-stopped
+    command: ["-js", "-m", "8222"]
+    ports:
+      - "4222:4222"  # Client connections
+      - "8222:8222"  # HTTP monitoring
+    networks:
+      - opensms-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MinIO Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: opensms-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: opensms
+      MINIO_ROOT_PASSWORD: opensms_minio_password
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - opensms-network
+
+  # Jaeger Tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: opensms-jaeger
+    restart: unless-stopped
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "5775:5775/udp"  # accept zipkin.thrift over compact thrift protocol
+      - "6831:6831/udp"  # accept jaeger.thrift over compact thrift protocol
+      - "6832:6832/udp"  # accept jaeger.thrift over binary thrift protocol
+      - "5778:5778"      # serve configs
+      - "16686:16686"    # serve frontend
+      - "14250:14250"    # accept model.proto
+      - "14268:14268"    # accept jaeger.thrift directly from clients
+      - "14269:14269"    # health check
+      - "9411:9411"      # Zipkin compatible endpoint
+    networks:
+      - opensms-network
+
+  # Prometheus Metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: opensms-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - opensms-network
+
+  # Grafana Dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: opensms-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./infrastructure/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    networks:
+      - opensms-network
+
+  # Backend API (Development)
+  # Uncomment when backend is ready to run
+  # api:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: opensms-api
+  #   restart: unless-stopped
+  #   environment:
+  #     APP_ENV: development
+  #     SERVER_HOST: 0.0.0.0
+  #     SERVER_PORT: 8080
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_USER: opensms
+  #     DB_PASSWORD: opensms_dev_password
+  #     DB_NAME: opensms
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     REDIS_PASSWORD: opensms_redis_password
+  #     NATS_URL: nats://nats:4222
+  #     MINIO_ENDPOINT: minio:9000
+  #     MINIO_ACCESS_KEY: opensms
+  #     MINIO_SECRET_KEY: opensms_minio_password
+  #     JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - nats
+  #     - minio
+  #   networks:
+  #     - opensms-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  opensms-network:
+    driver: bridge

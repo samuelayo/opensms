@@ -178,7 +178,14 @@ func (s *Server) registerAcademicModule(router fiber.Router) {
 	// Attendance
 	attendanceGroup := router.Group("/attendance", s.authMiddleware())
 	attendanceGroup.Get("/class/:class_id", s.requirePermission(security.PermAttendanceRead), academicHandler.GetClassAttendance)
+	attendanceGroup.Get("/student/:student_id/stats", s.requirePermission(security.PermAttendanceRead), academicHandler.GetAttendanceStats)
 	attendanceGroup.Post("/", s.requirePermission(security.PermAttendanceMark), academicHandler.MarkAttendance)
+	attendanceGroup.Post("/bulk", s.requirePermission(security.PermAttendanceMark), academicHandler.BulkMarkAttendance)
+
+	// Assignments
+	assignmentsGroup := router.Group("/assignments", s.authMiddleware())
+	assignmentsGroup.Get("/", s.requirePermission(security.PermGradeRead), academicHandler.ListAssignments)
+	assignmentsGroup.Post("/", s.requirePermission(security.PermGradeCreate), academicHandler.CreateAssignment)
 }
 
 // healthCheck returns the health status of the server

@@ -109,12 +109,15 @@ func (s *Server) registerAuthModule(router fiber.Router) {
 
 // registerUsersModule registers user management routes
 func (s *Server) registerUsersModule(router fiber.Router) {
+	crypto := security.NewCrypto(s.deps.Config.Security.EncryptionKey)
+
 	usersHandler := users.NewHandler(users.HandlerDeps{
 		DB:       s.deps.DB,
 		Cache:    s.deps.Cache,
 		EventBus: s.deps.EventBus,
 		RBAC:     s.rbac,
 		Logger:   s.deps.Logger,
+		Crypto:   crypto,
 	})
 
 	usersGroup := router.Group("/users", s.authMiddleware())

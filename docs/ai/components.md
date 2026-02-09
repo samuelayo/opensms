@@ -1,5 +1,10 @@
 # Components
 
+**⚠️ IMPLEMENTATION STATUS**:
+- ✅ Infrastructure components (1-5, 9-10): **FULLY IMPLEMENTED** with tests
+- ❌ Business modules (6-8): **PLACEHOLDER ONLY** - handlers exist but return "to be implemented"
+- See `docs/ai/implementation-status.md` for complete breakdown
+
 ## 1. HTTP Server & Routing
 
 ### Purpose
@@ -167,7 +172,7 @@ Subscribe(subject, handler) → NATS receives event →
 - **External**: NATS JetStream server
 - **Queue**: Message persistence and delivery guarantees
 
-## 6. Authentication Module
+## 6. Authentication Module ❌ PLACEHOLDER
 
 ### Purpose
 - User registration, login, logout
@@ -176,26 +181,22 @@ Subscribe(subject, handler) → NATS receives event →
 
 ### Key Types/Functions
 - `Handler` struct in `backend/internal/modules/auth/handler.go`
-- `Login()`, `Register()`, `RefreshToken()`, `ForgotPassword()`, etc.
+- **ALL METHODS RETURN "to be implemented"**: `Login()`, `Register()`, `RefreshToken()`, `ForgotPassword()`, etc.
 
 ### Important Flows
 ```
-Registration:
-POST /auth/register → ValidateInput → CheckEmailExists →
-  HashPassword → CreateUser → SendVerificationEmail →
-  GenerateTokenPair → Response
-
-2FA Flow:
-POST /auth/enable-2fa → Generate TOTP Secret → QR Code →
-  POST /auth/verify-2fa → Validate TOTP → Enable 2FA → Response
+⚠️ PLANNED (NOT IMPLEMENTED):
+POST /auth/register → Returns 501 Not Implemented
+POST /auth/login → Returns 501 Not Implemented
+POST /auth/refresh → Returns 501 Not Implemented
 ```
 
 ### Touches
-- **DB**: Users table
-- **Cache**: Session storage
-- **Event Bus**: Publish user.registered, user.login events
+- **DB**: Would use users table (NOT IMPLEMENTED)
+- **Cache**: Would use session storage (NOT IMPLEMENTED)
+- **Event Bus**: Would publish events (NOT IMPLEMENTED)
 
-## 7. Users Module
+## 7. Users Module ❌ PLACEHOLDER
 
 ### Purpose
 - User/student/teacher CRUD operations
@@ -204,28 +205,22 @@ POST /auth/enable-2fa → Generate TOTP Secret → QR Code →
 
 ### Key Types/Functions
 - `Handler` struct in `backend/internal/modules/users/handler.go`
-- `ListUsers()`, `GetUser()`, `CreateUser()`, `UpdateUser()`, `DeleteUser()`
-- `ListStudents()`, `CreateStudent()`, etc.
+- **ALL METHODS RETURN "to be implemented"**: `ListUsers()`, `GetUser()`, `CreateUser()`, `UpdateUser()`, `DeleteUser()`, `ListStudents()`, `CreateStudent()`, etc.
 
 ### Important Flows
 ```
-Create Student:
-POST /students → ValidateInput → CheckPermission(student:create) →
-  SetTenant() → CreateStudent(DB) → Publish(student.created) → Response
-
-List with Pagination:
-GET /students?page=1&per_page=20 →
-  Parse Query Params → SetTenant() →
-  SELECT with LIMIT/OFFSET → Count Total →
-  Response with pagination metadata
+⚠️ PLANNED (NOT IMPLEMENTED):
+POST /students → Returns {"message": "Create student - to be implemented"}
+GET /students → Returns {"message": "List students - to be implemented"}
+GET /students/:id → Returns {"message": "Get student - to be implemented"}
 ```
 
 ### Touches
-- **DB**: Users, students, teachers tables
-- **Cache**: User data caching
-- **Event Bus**: Publish user lifecycle events
+- **DB**: Would use users, students, teachers tables (NOT IMPLEMENTED)
+- **Cache**: Would cache data (NOT IMPLEMENTED)
+- **Event Bus**: Would publish events (NOT IMPLEMENTED)
 
-## 8. Academic Module
+## 8. Academic Module ❌ PLACEHOLDER
 
 ### Purpose
 - Academic year, class, subject management
@@ -234,25 +229,20 @@ GET /students?page=1&per_page=20 →
 
 ### Key Types/Functions
 - `Handler` struct in `backend/internal/modules/academic/handler.go`
-- `ListClasses()`, `CreateGrade()`, `MarkAttendance()`, etc.
+- **ALL METHODS RETURN "to be implemented"**: `ListClasses()`, `CreateGrade()`, `MarkAttendance()`, etc.
 
 ### Important Flows
 ```
-Grade Entry:
-POST /grades → ValidateInput → CheckPermission(grade:create) →
-  SetTenant() →
-  BeginTx() → InsertGrade → UpdateStudentGPA → Commit →
-  Publish(grade.created) → NotifyStudent → Response
-
-Attendance:
-POST /attendance → Bulk Insert → Calculate Stats →
-  Publish(attendance.marked) → Update Analytics → Response
+⚠️ PLANNED (NOT IMPLEMENTED):
+POST /grades → Returns {"message": "Create grade - to be implemented"}
+POST /attendance → Returns {"message": "Mark attendance - to be implemented"}
+GET /classes → Returns {"message": "List classes - to be implemented"}
 ```
 
 ### Touches
-- **DB**: Academic_years, classes, subjects, grades, attendance tables
-- **Cache**: Class rosters, grade summaries
-- **Event Bus**: Academic event notifications
+- **DB**: Would use academic_years, classes, subjects tables (grades/attendance tables don't exist yet)
+- **Cache**: Would cache data (NOT IMPLEMENTED)
+- **Event Bus**: Would publish events (NOT IMPLEMENTED)
 
 ## 9. Configuration Management
 

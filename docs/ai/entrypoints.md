@@ -1,5 +1,12 @@
 # Entrypoints
 
+**⚠️ CRITICAL**: All routes are **REGISTERED** but return **PLACEHOLDER** responses. See `docs/ai/implementation-status.md` for details.
+
+- Auth endpoints return: `{"message": "Login endpoint - to be implemented"}` with 501 status
+- Users/Students/Teachers endpoints return: `{"message": "List users - to be implemented"}`
+- Academic endpoints return: `{"message": "Get grades - to be implemented"}`
+- **ONLY** health checks (`/health`, `/api/v1/public/health`) and metrics (`/metrics`) are functional
+
 ## Services/Binaries
 
 ### API Server

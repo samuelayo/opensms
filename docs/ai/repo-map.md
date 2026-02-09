@@ -2,9 +2,13 @@
 
 ## What This Repo Is
 
-- Production-grade school management system for primary through university level institutions
+- **SKELETON/SCAFFOLD** for a production-grade school management system (primary through university level)
+- Infrastructure, security foundations, and database schema are **fully implemented**
+- **All business logic handlers are placeholders** returning "to be implemented" (see `docs/ai/implementation-status.md`)
 - Built as a modular monolith with microservices evolution path, designed for extreme scale (millions of users, thousands of institutions)
 - Multi-tenant SaaS platform with row-level security, supporting 10K+ institutions on shared infrastructure
+
+**⚠️ CURRENT STATE**: Server runs, middleware works, tests pass, but NO actual CRUD operations are implemented. All API endpoints return 501 Not Implemented or placeholder responses.
 
 ## Tech Stack
 

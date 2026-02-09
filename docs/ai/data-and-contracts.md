@@ -76,13 +76,17 @@
   - Columns: id, tenant_id, user_id, school_id, employee_id, department_id, date_of_birth, gender, date_of_joining, qualification, specialization, experience_years, employment_type
   - RLS: tenant_id isolation
 
-**Expected Additional Tables** (not yet in migrations):
-- `grades` - Student grades/marks
-- `attendance` - Student attendance records
-- `assignments` - Homework/assignments
-- `exams` - Examination records
-- `fee_structures` - Fee management
-- `payments` - Payment tracking
+**❌ MISSING TABLES** (referenced in code but not in migrations):
+- `grades` - Student grades/marks (API endpoints exist but return placeholders)
+- `attendance` - Student attendance records (API endpoints exist but return placeholders)
+- `assignments` - Homework/assignments (not scaffolded yet)
+- `exams` - Examination records (not scaffolded yet)
+- `fee_structures` - Fee management (not scaffolded yet)
+- `payments` - Payment tracking (not scaffolded yet)
+- `timetables` - Class schedules (not scaffolded yet)
+- `library_*` - Library management (not scaffolded yet)
+- `transport_*` - Transport management (not scaffolded yet)
+- `hostel_*` - Hostel management (not scaffolded yet)
 
 #### Custom Types (ENUMs)
 
@@ -169,9 +173,11 @@
 
 ### REST API
 
+**⚠️ ROUTES REGISTERED BUT NOT IMPLEMENTED**: All endpoints return placeholder messages
+
 **Base Path**: `/api/v1`
 **Format**: JSON
-**Authentication**: Bearer JWT tokens in `Authorization` header
+**Authentication**: Bearer JWT tokens in `Authorization` header (middleware validates but no login endpoint works)
 
 #### Common Request Headers
 - `Authorization: Bearer {access_token}` - Required for protected routes
